@@ -2,11 +2,17 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import org.example.Controller.AccountController;
 import org.example.Domen.Student;
 import org.example.Domen.StudentGroup;
 import org.example.Domen.StudentStream;
+import org.example.Domen.Teacher;
+import org.example.Services.PersonPrintSortedToNameServices;
+import org.example.Services.StudentService;
+import org.example.Services.TeacherServices;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -18,6 +24,19 @@ public class App {
         Student s6 = new Student("Катя",  23);
         Student s7 = new Student("Cartoon Head", 27);
 
+        StudentService studentService = new StudentService();
+        studentService.create("Артем", 25);
+        studentService.create("Онна", 26);
+        studentService.create("Сергей", 22);
+        studentService.create("Катя", 23);
+
+        TeacherServices teacherServices = new TeacherServices();
+        teacherServices.create("Филипп",45);
+        teacherServices.create("Мария",36);
+        teacherServices.create("Екатерина",57);
+        teacherServices.create("Варвара",42);
+
+        PersonPrintSortedToNameServices printSortedToNameServices = new PersonPrintSortedToNameServices();
 
         List<Student> listStud5123 = new ArrayList<Student>();
         listStud5123.add(s2);
@@ -47,7 +66,7 @@ public class App {
         System.out.println("~~~~~~~~~~~~~~~ Список потока ~~~~~~~~~~~~~~~~~~~");
         System.out.println();
 
-        List<StudentGroup> listGroup1 = new ArrayList<StudentGroup>();
+        List<StudentGroup> listGroup1 = new ArrayList<>();
         listGroup1.add(group5123);
         listGroup1.add(group5125);
         listGroup1.add(group5127);
@@ -59,14 +78,15 @@ public class App {
         System.out.println("-------------- Список потока по группам ------------------");
         System.out.println();
 
-        for(StudentGroup std: stream1.getStream())
-        {
-            System.out.println(std);
+        for (StudentGroup students : stream1.getStream()) {
+            System.out.println(students);
         }
+
 
         System.out.println();
         System.out.println("=============== Список студентов по группам ==================");
         System.out.println();
+
 
         printStudents(group5123);
         printStudents(group5125);
@@ -76,28 +96,40 @@ public class App {
         System.out.println("*************** Сортировка в группе по возрасту *****************");
         System.out.println();
 
-        Collections.sort(group5125.getGroup());
-        for(Student std: group5125.getGroup())
-        {
-            System.out.println(std);
-        }
+       group5125.getGroup().stream()
+                .sorted()
+                .forEach(System.out::println);
 
         System.out.println();
         System.out.println("*      * Сортировка в потоке по количеству студентов в группе *     *");
         System.out.println();
 
-        Collections.sort(stream1.getStream());
-        for(StudentGroup std: stream1.getStream())
-        {
-            System.out.println(std);
-        }
+        stream1.getStream().stream()
+                .sorted()
+                .forEach(System.out::println);
+
 
         System.out.println();
         System.out.println("*      * Сортировка в потоке по идентификатору группы *      *");
         System.out.println();
 
+        listGroup1.stream()
+                .sorted(Comparator.comparingInt(StudentGroup::getIdGroup))
+                .forEach(System.out::println);
 
+        System.out.println();
+        System.out.println("Средний возраст учителей = " + AccountController.averageAge(teacherServices.getAll()));
+        System.out.println();
 
+        System.out.println();
+        System.out.println(" +++++++++++++ Список учителей по алфавиту+++++++++++");
+        System.out.println();
+        printSortedToNameServices.print(teacherServices.getAll());
+
+        System.out.println();
+        System.out.println(" +++++++++++++ Список студентов по алфавиту+++++++++++");
+        System.out.println();
+        printSortedToNameServices.print(studentService.getAll());
     }
 
 

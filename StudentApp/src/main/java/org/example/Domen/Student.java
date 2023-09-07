@@ -3,7 +3,7 @@ package org.example.Domen;
 
 public class Student extends Person implements Comparable<Student> {
 
-    private int id;
+    private final int id;
     private static int generalId = 1;
 
     public Student(String name, int age) {
@@ -19,7 +19,7 @@ public class Student extends Person implements Comparable<Student> {
 
     @Override
     public String toString() {
-        return "Студент [Имя: " + super.getName() + ", возраст: " + super.getAge() + ", id: " + id + "]";
+        return "Студент [Имя: " + super.getName() + ", возраст: " + super.getAge() + ", id: " + id + "]" ;
     }
 
     @Override
